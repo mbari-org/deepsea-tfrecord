@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<annotation verified="no">
+	<folder>MBARI_BENTHIC_2017</folder>
+	<filename>D0232_03HD_00-00-35.png</filename>
+	<source>
+		<image>ROV Dive D0232_03H</image>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>960</width>
+		<height>540</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>PENIAGONE_SP_A</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>662</xmin>
+			<ymin>456</ymin>
+			<xmax>749</xmax>
+			<ymax>520</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>ECHINOCREPIS</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>673</xmin>
+			<ymin>95</ymin>
+			<xmax>800</xmax>
+			<ymax>204</ymax>
+		</bndbox>
+	</object>
+</annotation>

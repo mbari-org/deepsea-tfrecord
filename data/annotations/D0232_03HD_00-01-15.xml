@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<annotation verified="no">
+	<folder>MBARI_BENTHIC_2017</folder>
+	<filename>D0232_03HD_00-01-15.png</filename>
+	<source>
+		<image>ROV Dive D0232_03H</image>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>960</width>
+		<height>540</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>PENIAGONE_VITRAE</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>494</xmin>
+			<ymin>269</ymin>
+			<xmax>538</xmax>
+			<ymax>333</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>TJALFIELLA</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>597</xmin>
+			<ymin>182</ymin>
+			<xmax>625</xmax>
+			<ymax>205</ymax>
+		</bndbox>
+	</object>
+</annotation>

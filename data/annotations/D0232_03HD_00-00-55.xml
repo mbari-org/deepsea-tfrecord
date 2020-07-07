@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<annotation verified="no">
+	<folder>MBARI_BENTHIC_2017</folder>
+	<filename>D0232_03HD_00-00-55.png</filename>
+	<source>
+		<image>ROV Dive D0232_03H</image>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>960</width>
+		<height>540</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>FUNGIACYATHUS_MARENZELLERI</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>562</xmin>
+			<ymin>261</ymin>
+			<xmax>651</xmax>
+			<ymax>326</ymax>
+		</bndbox>
+	</object>
+</annotation>
