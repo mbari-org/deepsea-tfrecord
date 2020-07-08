@@ -35,7 +35,7 @@ Assuming data is stored in your current directory /data in the format
 docker run -it \
 -v $PWD/data:/data \
 -v  $PWD:/out \
-tfrecord \
+mbari/deepsea-tfrecord \
 -l /data/label_map.pbtxt \
 --annotation_dir /data/annotations \
 --image_dir /data/imgs \
@@ -43,7 +43,7 @@ tfrecord \
 -s train'
 ```
 
-# Build
+# Build for your own use
 ```bash
 export DOCKER_GID=<your docker group id>
 export DOCKER_UID=<your docker user id>

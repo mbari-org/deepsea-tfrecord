@@ -2,7 +2,7 @@
     "branch": "master",
     "verifyConditions": {                                                                                                                             
         "path": "semantic-release-docker",
-        "registryUrl": "docker.io"                                                                                                                    
+        "registryUrl": "docker.io"
     },             
     "plugins": [
         "commitizen",
