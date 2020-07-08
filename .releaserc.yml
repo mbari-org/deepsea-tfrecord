@@ -27,7 +27,7 @@
         [                                                                                                                                             
             "@semantic-release/exec",                                                                                                                 
             {                                                                                                                                         
-                "prepareCmd": "docker build --build-arg DOCKER_GID=$DOCKER_GID --build-arg DOCKER_UID=$DOCKER_UID -t mbari/deepsea-tfrecord ."
+                "prepareCmd": "docker build --build-arg DOCKER_GID=`id -g` --build-arg DOCKER_UID=`id -u` -t mbari/deepsea-tfrecord ."
             }                                                                                                                                         
         ],                                                                                                                                            
     ],                                                                                                                                                
