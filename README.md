@@ -1,6 +1,12 @@
-# README #
+[MBARI](https://www.mbari.org/wp-content/uploads/2014/11/logo-mbari-3b.png)
+<p align="right">
+    <b> <img src="https://img.shields.io/badge/Supported%20Platforms-Windows%20%7C%20macOS%20%7C%20Linux-green" title="Supported Platforms"/> </b> <br>
+    <b> <img src="https://img.shields.io/badge/license-GPL-blue" title="license-GPL"/> </b> <br>
+</p>
 
-Preprocess PNG images and PASCAL formatted annotations for use in the Tensorflow Object Detection API.
+# About
+
+*deepsea-tfrecord* creates tensorflow records files from PNG images and PASCAL formatted annotations for use in the Tensorflow Object Detection API.
     
 ![ Image link ](/img/flow.jpg)
 
