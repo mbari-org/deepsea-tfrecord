@@ -237,6 +237,8 @@ def dict_to_tf_example(xml_in,
     Raises:
       ValueError: if the image pointed to by data['filename'] is not a valid PNG
     """
+
+
     root = os.path.basename(xml_in).split('.')[0]
     img_path = os.path.join(image_dir, data['filename'])
     encoded_png, mean = resize(img_path, width, height, deinterlace, grayscale)
@@ -357,6 +359,7 @@ def main(_):
             examples_list = [line.strip() for line in lines]
 
         for idx, example in enumerate(examples_list):
+            label_example = dict.fromkeys(label_map_dict.keys(), 0)
             if idx % 10 == 0:
                 print('Processing image {} of {}'.format(idx, len(examples_list)))
             try:
@@ -401,7 +404,7 @@ def main(_):
                 if tf_example and has_labels:
                     for key, value in label_example.items():
                         labels[key] += value
-                writer.write(tf_example.SerializeToString())
+                    writer.write(tf_example.SerializeToString())
             except Exception as ex:
                 print(ex)
                 continue
