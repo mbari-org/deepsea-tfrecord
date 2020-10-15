@@ -374,6 +374,8 @@ def main(_):
             if idx % 10 == 0:
                 print('Processing image {} of {}'.format(idx, len(examples_list)))
             try:
+                if not example.endswith('.xml'):
+                    example += '.xml'
                 example = os.path.join(args.annotation_dir, example)
                 with open(example, 'r') as fid:
                     xml_str = fid.read()
