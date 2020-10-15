@@ -29,17 +29,9 @@ RUN python3 -m pip install Cython==0.28.2
 RUN python3 -m pip install pycocotools==2.0.0
 COPY src/main/ /app
 COPY requirements.txt /app
+
 RUN pip install -r /app/requirements.txt
-ARG DOCKER_GID
-ARG DOCKER_UID
-
-# Add non-root user and fix permissions
-RUN groupadd --gid $DOCKER_GID docker && adduser --uid $DOCKER_UID --gid $DOCKER_GID --disabled-password --quiet --gecos "" docker_user
-RUN chown -Rf docker_user:docker /app
-
-USER docker_user
 WORKDIR /app
-RUN chown -Rf docker_user:docker /app
 ENTRYPOINT ["python3", "/app/create_tfrecord.py"]
 
 # Add test, building on

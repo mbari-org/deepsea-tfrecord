@@ -23,18 +23,24 @@
 
 ## *Example*
 
-Assuming data is stored in your current directory /data in the format
+Assuming data is stored in your current directory in the layout
  
- * /data/imgs
- * /data/annotations
- * /data/label_map.pbtxt
+ * imgs/
+ * annotations/
+ * label_map.pbtxt
  
  create tensorflow record using label map  /data/label_map.pbtxt on the data in /data and store in record file train.record.
+
+ * run as you -u $(id -u):$(id -g)
+ * remove after running --rm
+ * run interactively -it
+ * mount your current directory to /data -v $PWD:/data
 
 ```bash
 docker run -it \
 -v $PWD/data:/data \
 -v  $PWD:/out \
+-u $(id -u):$(id -g) \
 mbari/deepsea-tfrecord \
 -l /data/label_map.pbtxt \
 --annotation_dir /data/annotations \
@@ -43,11 +49,9 @@ mbari/deepsea-tfrecord \
 -s train'
 ```
 
-# Build for your own use
+# Build 
 ```bash
-export DOCKER_GID=<your docker group id>
-export DOCKER_UID=<your docker user id>
-docker build --build-arg DOCKER_GID=$DOCKER_GID --build-arg DOCKER_UID=$DOCKER_UID -t tfrecord .
+./build.sh
 ```
 
 # References

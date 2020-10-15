@@ -181,7 +181,6 @@ def img_to_tf(img_path, width, height, deinterlace, grayscale):
     :param grayscale:  to true if convert to grayscale
     :return: record, mean of the image
     """
-
     _, filename = os.path.split(img_path)
     encoded_png, mean = resize(img_path, width, height, deinterlace, grayscale)
     encoded_png_io = io.BytesIO(encoded_png)
@@ -383,6 +382,7 @@ def main(_):
                     data = dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
                     if args.integer_id:
                         id = str(idx)
+                        print('==========================================================================================...============================================================>')
                     else:
                         id = data['filename']
                     tf_example, label_example, mean = dict_to_tf_example(id, data, args.image_dir, label_map_dict,
