@@ -43,10 +43,19 @@ TARGET_HEIGHT = 540
 
 
 def process_command_line():
-    '''
+    """
     Process command line
     :return: args object
-    '''
+    """
+    def str2bool(v):
+        if isinstance(v, bool):
+            return v
+        if v.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+        else:
+            raise argparse.ArgumentTypeError('Boolean value expected.')
 
     import argparse
     from argparse import RawTextHelpFormatter
@@ -60,7 +69,8 @@ def process_command_line():
                                      description='Creates Tensorflow Record object for MBARI annotated data',
                                      epilog=examples)
     parser.add_argument('--annotation_dir', action='store', help='Directory with annotations', required=True)
-    parser.add_argument('--image_dir', action='store', help='Directory with images associated with annotations', default='', required=True)
+    parser.add_argument('--image_dir', action='store', help='Directory with images associated with annotations',
+                        default='', required=True)
     parser.add_argument('-o', '--output_record', action='store', help='Path to output TFRecord', required=True)
     parser.add_argument('-l', '--label_map_path', action='store', help='Path to label map proto', required=False)
     parser.add_argument('-s', '--set', action='store', help='Convert training set, validation set or merged set.',
@@ -69,8 +79,10 @@ def process_command_line():
     parser.add_argument('--resize', help='Resize images to wxh', required=False, type=str, default="960x540")
     parser.add_argument('--minsize', help='Minimum size bounding box to include in record wxh', required=False,
                         type=str, default="75x75")
-    parser.add_argument('--grayscale', help='Convert images to grayscale', required=False, type=bool, default=False)
-    parser.add_argument('--deinterlace', help='Deinterlace', required=False, type=bool, default=False)
+    parser.add_argument('--grayscale', help='Convert images to grayscale', type=str2bool, default=False)
+    parser.add_argument('--integer_id', help='Convert images and annotations to integer ids as required for COCO ',
+                        type=str2bool, default=False)
+    parser.add_argument('--deinterlace', help='Deinterlace', type=str2bool, default=False)
     parser.add_argument('--labels', action='store',
                         help='List of space separated labels to load. Must be in the label map proto', nargs='*',
                         required=False)
@@ -160,15 +172,15 @@ def resize(image_dir, target_width, target_height, deinterlace=False, grayscale=
 
 
 def img_to_tf(img_path, width, height, deinterlace, grayscale):
-    '''
+    """
     Convert image to tensorflow record
     :param img_path: full path to image
     :param width: width to resize image to
     :param height: height to resize image to
     :param deinterlace:  true if deinterlacing needed
     :param grayscale:  to true if convert to grayscale
-    :return:
-    '''
+    :return: record, mean of the image
+    """
 
     _, filename = os.path.split(img_path)
     encoded_png, mean = resize(img_path, width, height, deinterlace, grayscale)
@@ -204,7 +216,7 @@ def img_to_tf(img_path, width, height, deinterlace, grayscale):
     return example, mean
 
 
-def dict_to_tf_example(xml_in,
+def dict_to_tf_example(id,
                        data,
                        image_dir,
                        label_map_dict,
@@ -219,6 +231,7 @@ def dict_to_tf_example(xml_in,
     Notice that this function normalizes the bounding box coordinates provided
     by the raw data.
 
+    :param id: image identifier to use in record
     :param data: dict holding XML fields for a single image (obtained by
     :param running dataset_util.recursive_parse_xml_to_dict)
     :param image_dir: image directory
@@ -238,8 +251,6 @@ def dict_to_tf_example(xml_in,
       ValueError: if the image pointed to by data['filename'] is not a valid PNG
     """
 
-
-    root = os.path.basename(xml_in).split('.')[0]
     img_path = os.path.join(image_dir, data['filename'])
     encoded_png, mean = resize(img_path, width, height, deinterlace, grayscale)
     encoded_png_io = io.BytesIO(encoded_png)
@@ -294,9 +305,9 @@ def dict_to_tf_example(xml_in,
         'image/height': dataset_util.int64_feature(height),
         'image/width': dataset_util.int64_feature(width),
         'image/filename': dataset_util.bytes_feature(
-            data['filename'].encode('utf8')),
+            id.encode('utf8')),
         'image/source_id': dataset_util.bytes_feature(
-            data['filename'].encode('utf8')),
+            id.encode('utf8')),
         'image/key/sha256': dataset_util.bytes_feature(png_key.encode('utf8')),
         'image/encoded': dataset_util.bytes_feature(encoded_png),
         'image/format': dataset_util.bytes_feature('png'.encode('utf8')),
@@ -333,6 +344,7 @@ def main(_):
     writer = tf.python_io.TFRecordWriter(output)
 
     label_map_dict = {}
+    label_example = {}
     has_labels = False
     means = []
 
@@ -359,7 +371,6 @@ def main(_):
             examples_list = [line.strip() for line in lines]
 
         for idx, example in enumerate(examples_list):
-            label_example = dict.fromkeys(label_map_dict.keys(), 0)
             if idx % 10 == 0:
                 print('Processing image {} of {}'.format(idx, len(examples_list)))
             try:
@@ -368,18 +379,22 @@ def main(_):
                     xml_str = fid.read()
                     xml = etree.fromstring(xml_str)
                     data = dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
-                    tf_example, label_example, mean = dict_to_tf_example(example, data, args.image_dir, label_map_dict,
+                    if args.integer_id:
+                        id = str(idx)
+                    else:
+                        id = data['filename']
+                    tf_example, label_example, mean = dict_to_tf_example(id, data, args.image_dir, label_map_dict,
                                                                          args.labels,
                                                                          width, height, args.minsize, args.deinterlace,
                                                                          args.grayscale)
                     means.append(mean)
+                    if tf_example:
+                        for key, value in label_example.items():
+                            labels[key] += value
+                        writer.write(tf_example.SerializeToString())
             except Exception as ex:
                 print(ex)
                 continue
-            if tf_example:
-                for key, value in label_example.items():
-                    labels[key] += value
-                writer.write(tf_example.SerializeToString())
             else:
                 logging.warning('No objects found in {}'.format(example))
 
@@ -391,11 +406,11 @@ def main(_):
         for key, value in labels.items():
             print('Total {} = {}'.format(key, value))
 
-        print('Done. Found {} examples in {} set.\nImage mean {} normalized {}'.format(sum(labels.values()), args.set,
+        print('Done. Found {} examples in {} set.\nImage BGR mean {} normalized {}'.format(sum(labels.values()), args.set,
                                                                                        mean, mean / 255))
     else:
         in_path = os.path.join(args.image_dir, '*.png')
-        print('Searching for images in {}'.format(in_path))
+        print('Searching for examples in {}'.format(in_path))
         examples_list = sorted(glob.glob(in_path))
         for example in examples_list:
             try:
@@ -414,10 +429,8 @@ def main(_):
         if len(means) > 0:
             mean = np.mean(means, axis=(0))
 
-        for key, value in labels.items():
-            print('Total {} = {}'.format(key, value))
+        print('Done. Found {} examples. \nImage BGR mean {} normalized {}'.format(len(examples_list), mean, mean / 255))
 
-        print('Done. Found {} examples. \nImage mean {} normalized {}'.format(len(examples_list), mean, mean / 255))
 
 if __name__ == '__main__':
     tf.app.run()
