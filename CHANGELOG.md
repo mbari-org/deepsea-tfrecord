@@ -1,5 +1,12 @@
 # DeepSea Tensorflow Record Utility Changelog
 
+# [1.2.0](http://bitbucket.org/mbari/deepsea-tfrecord/compare/v1.1.0...v1.2.0) (2020-10-30)
+
+
+### Features
+
+* added std output ([812866f](http://bitbucket.org/mbari/deepsea-tfrecord/commits/812866f8925c8e4ee8b5e9eb57c8746f90c5e156))
+
 # [1.1.0](http://bitbucket.org/mbari/deepsea-tfrecord/compare/v1.0.0...v1.1.0) (2020-10-15)
 
 
