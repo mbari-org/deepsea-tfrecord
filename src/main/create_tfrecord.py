@@ -162,13 +162,14 @@ def resize(image_dir, target_width, target_height, deinterlace=False, grayscale=
         else:
             cv2.imwrite(path, final_image)
 
-        mean = np.mean(cv2.imread(path), axis=(0, 1))
+        mean = np.mean(final_image, axis=(0, 1))
+        std = np.std(final_image, axis=(0, 1))
         with tf.gfile.GFile(path, 'rb') as fid:
             encoded_png = fid.read()
     finally:
         os.remove(path)
 
-    return encoded_png, mean
+    return encoded_png, mean, std
 
 
 def img_to_tf(img_path, width, height, deinterlace, grayscale):
@@ -182,7 +183,7 @@ def img_to_tf(img_path, width, height, deinterlace, grayscale):
     :return: record, mean of the image
     """
     _, filename = os.path.split(img_path)
-    encoded_png, mean = resize(img_path, width, height, deinterlace, grayscale)
+    encoded_png, mean, std = resize(img_path, width, height, deinterlace, grayscale)
     encoded_png_io = io.BytesIO(encoded_png)
     image = Image.open(encoded_png_io)
     if image.format != 'PNG':
@@ -212,7 +213,7 @@ def img_to_tf(img_path, width, height, deinterlace, grayscale):
         'image/object/class/label': dataset_util.int64_list_feature(classes),
     }))
 
-    return example, mean
+    return example, mean, std
 
 
 def dict_to_tf_example(id,
@@ -251,7 +252,7 @@ def dict_to_tf_example(id,
     """
 
     img_path = os.path.join(image_dir, data['filename'])
-    encoded_png, mean = resize(img_path, width, height, deinterlace, grayscale)
+    encoded_png, mean, std = resize(img_path, width, height, deinterlace, grayscale)
     encoded_png_io = io.BytesIO(encoded_png)
     image = Image.open(encoded_png_io)
     if image.format != 'PNG':
@@ -317,7 +318,7 @@ def dict_to_tf_example(id,
         'image/object/class/text': dataset_util.bytes_list_feature(classes_text),
         'image/object/class/label': dataset_util.int64_list_feature(classes),
     }))
-    return example, my_labels, mean
+    return example, my_labels, mean, std
 
 
 def main(_):
@@ -346,6 +347,7 @@ def main(_):
     label_example = {}
     has_labels = False
     means = []
+    stds = []
 
     if args.label_map_path:
         d = label_map_util.get_label_map_dict(args.label_map_path)
@@ -382,14 +384,15 @@ def main(_):
                     data = dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
                     if args.integer_id:
                         id = str(idx)
-                        print('==========================================================================================...============================================================>')
+                        print('<============================================================>')
                     else:
                         id = data['filename']
-                    tf_example, label_example, mean = dict_to_tf_example(id, data, args.image_dir, label_map_dict,
+                    tf_example, label_example, mean, std = dict_to_tf_example(id, data, args.image_dir, label_map_dict,
                                                                          args.labels,
                                                                          width, height, args.minsize, args.deinterlace,
                                                                          args.grayscale)
                     means.append(mean)
+                    stds.append(std)
                     if tf_example:
                         for key, value in label_example.items():
                             labels[key] += value
@@ -402,14 +405,16 @@ def main(_):
 
         writer.close()
         mean = 0
-        if len(means) > 0:
+        std = 0
+        if len(means) > 0 and len(stds) > 0:
             mean = np.mean(means, axis=(0))
+            std = np.mean(stds, axis=(0))
 
         for key, value in labels.items():
             print('Total {} = {}'.format(key, value))
 
-        print('Done. Found {} examples in {} set.\nImage BGR mean {} normalized {}'.format(sum(labels.values()), args.set,
-                                                                                       mean, mean / 255))
+        print('Done. Found {} examples in {} set.\nImage BGR mean {} normalized {} std {} normalized {}'.
+              format(sum(labels.values()), args.set, mean, mean / 255, std, std / 255 ))
     else:
         in_path = os.path.join(args.image_dir, '*.png')
         print('Searching for examples in {}'.format(in_path))
@@ -428,11 +433,13 @@ def main(_):
 
         writer.close()
         mean = 0
-        if len(means) > 0:
+        std = 0
+        if len(means) > 0 and len(stds) > 0:
             mean = np.mean(means, axis=(0))
+            std = np.mean(stds, axis=(0))
 
-        print('Done. Found {} examples. \nImage BGR mean {} normalized {}'.format(len(examples_list), mean, mean / 255))
-
+        print('Done. Found {} examples. \nImage BGR mean {} normalized {} std {} normalized {}'.
+              format(len(examples_list), mean, mean / 255, std, std / 255))
 
 if __name__ == '__main__':
     tf.app.run()
