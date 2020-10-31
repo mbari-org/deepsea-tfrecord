@@ -37,7 +37,7 @@ Assuming data is stored in your current directory in the layout
  * mount your current directory to /data -v $PWD:/data
 
 ```bash
-docker run -it \
+docker run -it --rm \
 -v $PWD/data:/data \
 -v  $PWD:/out \
 -u $(id -u):$(id -g) \
@@ -46,7 +46,7 @@ mbari/deepsea-tfrecord \
 --annotation_dir /data/annotations \
 --image_dir /data/imgs \
 -o /out/train.record \
--s train'
+-s train
 ```
 
 # Build 
