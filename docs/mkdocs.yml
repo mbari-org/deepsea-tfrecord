@@ -1,0 +1,23 @@
+site_name: DeepSea tfrecord
+site_author: Danelle Cline
+repo_url: "https://bitbucket.org/mbari/deepsea-tfrecord"
+theme:
+  name: material
+  logo: imgs/mbari-logo.png
+extra_css:
+    - https://docs.mbari.org/css/mbari.css
+
+markdown_extensions:
+  - admonition
+
+nav:
+  - DeepSea tfrecord: index.md
+  - Installation: install.md
+  - Usage: usage.md
+  - Change Log: CHANGELOG.md
+
+
+copyright: Maintained by <a href="https://www.mbari.org/cline-danelle-e/">Danelle Cline</a>.
+
+plugins:
+    - search
