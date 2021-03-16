@@ -1,13 +1,15 @@
 ## *Arguments* 
 
-  * -l name of TensorFlow label map file (extension .pbtxt)
-  * --annotation_dir directory with annotations
-  * -o path to output TFRecord (.record) file
-  * --image_path directory with image data associated with annotations
-  * --resize (optional) wxh resize images to wxh before storing in record file
-  * --minsize (optional) wxh minimum size bounding box to include in record file
-  * -s (optional) convert training or validation set (train/test)
-  * --labels (optional) list of space separated labels to load. Defaults to everything listed in the label map proto. Names must exist in the label map proto file. 
+| Argument | Description |
+|---|---|
+|-l |name of TensorFlow label map file (extension .pbtxt)|
+|--annotation_dir| directory with annotations|
+|-o |path to output TFRecord (.record) file|
+|--image_path [directory] |directory with image data associated with annotations|
+|--resize [wxh] |(optional) resize images to wxh before storing in record file, e.g. --resize 512x512 resizes to 512x512 pixels|
+|--minsize [wxh] | (optional) wxh minimum size bounding box to include in record file|
+|-s [train or test] | (optional) convert training or validation set (train/test)|
+|--labels [list of labels] | (optional) list of space separated labels to load. Defaults to everything listed in the label map proto. Names must exist in the label map proto file. |
 
 ## *Example*
 
