@@ -30,6 +30,7 @@ from lxml import etree
 import tensorflow as tf
 import hashlib
 import tempfile
+from . import __version__
 from PIL import Image
 
 from object_detection.utils import dataset_util
@@ -75,6 +76,7 @@ def process_command_line():
     parser.add_argument('-l', '--label_map_path', action='store', help='Path to label map proto', required=False)
     parser.add_argument('-s', '--set', action='store', help='Convert training set, validation set or merged set.',
                         required=False)
+    parser.add_argument('--version', help='Print version', default=__version__)
     parser.add_argument('--split', help='Train/test split.', required=False, type=str, default="0.8, 0.2")
     parser.add_argument('--resize', help='Resize images to wxh', required=False, type=str, default="960x540")
     parser.add_argument('--minsize', help='Minimum size bounding box to include in record wxh', required=False,

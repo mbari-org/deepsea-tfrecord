@@ -3,6 +3,13 @@
     "plugins": [
         "commitizen",
         "@semantic-release/commit-analyzer",
+        "@semantic-release/exec",
+        {
+          "verifyConditionsCmd",
+          {
+            "cmd": "printf '#!/usr/bin/env python\\n__version__ = \"%s\"\\n' ${nextRelease.version} > src/main/__init__.py"
+          }
+        },
         "@semantic-release/release-notes-generator",
         [
             "@semantic-release/changelog",
