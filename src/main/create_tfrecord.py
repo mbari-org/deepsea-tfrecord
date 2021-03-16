@@ -367,9 +367,12 @@ def main(_):
             split(labels, args.annotation_dir, train_per, tests_per)
 
         print('Reading examples from {}'.format(examples_path))
-        with open(examples_path) as fid:
-            lines = fid.readlines()
-            examples_list = [line.strip() for line in lines]
+        if os.path.exists(examples_path):
+            with open(examples_path) as fid:
+                lines = fid.readlines()
+                examples_list = [line.strip() for line in lines]
+        else: 
+            examples_list = []
 
         for idx, example in enumerate(examples_list):
             if idx % 10 == 0:
