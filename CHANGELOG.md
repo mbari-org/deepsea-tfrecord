@@ -1,5 +1,12 @@
 # DeepSea Tensorflow Record Utility Changelog
 
+## [1.2.1](http://bitbucket.org/mbari/deepsea-tfrecord/compare/v1.2.0...v1.2.1) (2021-03-16)
+
+
+### Bug Fixes
+
+* do not fail on empty records ([07d65a0](http://bitbucket.org/mbari/deepsea-tfrecord/commits/07d65a0426b4d7637e766c819862fed25ca5128f))
+
 # [1.2.0](http://bitbucket.org/mbari/deepsea-tfrecord/compare/v1.1.0...v1.2.0) (2020-10-30)
 
 
