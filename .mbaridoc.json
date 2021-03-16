@@ -1,5 +1,5 @@
 {
-  "destination": "vaa-registry",
+  "destination": "deepsea-tfrecord",
   "public": false,
   "docdir": "docs"
 }
