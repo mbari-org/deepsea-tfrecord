@@ -1,5 +1,12 @@
 # DeepSea Tensorflow Record Utility Changelog
 
+## [1.2.4](http://bitbucket.org/mbari/deepsea-tfrecord/compare/v1.2.3...v1.2.4) (2021-03-18)
+
+
+### Bug Fixes
+
+* correct nose version test ([9d951c6](http://bitbucket.org/mbari/deepsea-tfrecord/commits/9d951c6e96c7aa444576ece54c65932ca103149e))
+
 ## [1.2.3](http://bitbucket.org/mbari/deepsea-tfrecord/compare/v1.2.2...v1.2.3) (2021-03-17)
 
 
