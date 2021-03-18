@@ -26,12 +26,16 @@ import random
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'tensorflow_models/research'))
 sys.path.append(os.path.join(os.path.dirname(__file__)))
+if __package__ == None:
+    __version__ = "1.0.0"
+else:
+    from . import __version__
+
 
 from lxml import etree
 import tensorflow as tf
 import hashlib
 import tempfile
-from . import __version__
 from PIL import Image
 
 from object_detection.utils import dataset_util
