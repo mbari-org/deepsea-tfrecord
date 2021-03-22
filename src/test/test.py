@@ -14,10 +14,11 @@ Python test using the nose python framework
 @status: __status__
 @license: __license__
 '''
-
+import sys
 import os
 import subprocess
 from nose import with_setup
+sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 print("")  # this is to get a newline after the dots
 print("setup_module before anything in this file")
