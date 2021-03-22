@@ -11,6 +11,7 @@ markdown_extensions:
   - admonition
 
 nav:
+  - MBARI Internal Documentation: https://docs.mbari.org/internal/
   - DeepSea tfrecord: index.md
   - Installation: install.md
   - Usage: usage.md
