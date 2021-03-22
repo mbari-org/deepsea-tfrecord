@@ -3,7 +3,7 @@
 ## Requirement
 [Docker](http://docker.com/)
 
-A docker images of this is available in hub.docker.com, or if you prefer to build yourself a script is provided 
+A docker image of this is available in hub.docker.com, or if you prefer to build yourself a script is provided 
 for that:
  
 ```bash
