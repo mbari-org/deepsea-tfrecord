@@ -15,24 +15,19 @@
 
 Assuming data is stored in your current directory in the layout
  
- Will create
 ~~~
 │   └── imgs
 │   └── annotations
 │   └── label_map.pbtxt
 ~~~
 
- create tensorflow record using label map  /data/label_map.pbtxt on the data in /data and store in record file train.record.
-
- * run as you -u $(id -u):$(id -g)
- * remove after running --rm
- * run interactively -it
- * mount your current directory to /data -v $PWD:/data
-
+Create tensorflow record using label map  /data/label_map.pbtxt on the data in /data and store in record file train.record.
+ 
 ```bash
 docker run -it --rm \
 -v $PWD/data:/data \
 -v  $PWD:/out \
+-u $(id -u):$(id -g) \
 mbari/deepsea-tfrecord \
 -l /data/label_map.pbtxt \
 --annotation_dir /data/annotations \
@@ -40,3 +35,8 @@ mbari/deepsea-tfrecord \
 -o /out/train.record \
 -s train
 ```
+
+ * run as you **-u $(id -u):$(id -g)**
+ * remove after running **--rm**
+ * run interactively **-it**
+ * mount your current directory to /data **-v $PWD:/data**
