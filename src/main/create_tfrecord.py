@@ -151,15 +151,12 @@ def is_valid_xml(xml_filename, labels):
 def resize(image_dir, target_width, target_height, deinterlace=False, grayscale=False):
     img = cv2.imread(image_dir)
     h, w, channels = img.shape
-    print('Reading {} size {}x{} rescaling to {}x{}'.format(image_dir, w, h, target_width, target_height))
 
     fd, path = tempfile.mkstemp(suffix='.png')
     try:
         if deinterlace and h == 2 * target_height and w == 2 * target_width:
-            print('Deinterlacing {} {}x{} to {}x{}'.format(image_dir, h, w, target_height, target_width))
             final_image = img[::2, 1::2]
         elif h != target_height or w != target_width:
-            print('Rescaling {} {}x{} to {}x{}'.format(image_dir, w, h, target_width, target_height))
             final_image = cv2.resize(img, (target_width, target_height))
         else:
             final_image = img
@@ -281,7 +278,6 @@ def dict_to_tf_example(id,
 
     for obj in data['object']:
         name = obj['name']
-        print('Converting {} {}'.format(name, data))
         if labels and name not in labels:
             print('{} not in {} so excluding from record'.format(name, labels))
             continue
@@ -340,7 +336,6 @@ def main(_):
     else:
         width = TARGET_WIDTH
         height = TARGET_HEIGHT
-    print('Rescaling images to {}x{}'.format(width, height))
     output = os.path.join(args.annotation_dir, args.output_record)
 
     # touch the file if it doesn't already exist
@@ -394,7 +389,6 @@ def main(_):
                     data = dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
                     if args.integer_id:
                         id = str(idx)
-                        print('<============================================================>')
                     else:
                         id = data['filename']
                     tf_example, label_example, mean, std = dict_to_tf_example(id, data, args.image_dir, label_map_dict,
@@ -407,12 +401,12 @@ def main(_):
                         for key, value in label_example.items():
                             labels[key] += value
                         writer.write(tf_example.SerializeToString())
+                        writer.flush()
             except Exception as ex:
                 print(ex)
                 continue
-            else:
-                logging.warning('No objects found in {}'.format(example))
 
+        writer.flush()
         writer.close()
         mean = 0
         std = 0
@@ -437,10 +431,12 @@ def main(_):
                     for key, value in label_example.items():
                         labels[key] += value
                     writer.write(tf_example.SerializeToString())
+                    writer.flush()
             except Exception as ex:
                 print(ex)
                 continue
 
+        writer.flush()
         writer.close()
         mean = 0
         std = 0
